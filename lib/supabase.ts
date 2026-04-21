@@ -1,18 +1,22 @@
-import { createClient } from "@supabase/supabase-js";
+export async function updateStatus(id: string, status: ApplicationStatus) {
+  const { data, error } = await supabase
+    .from('applications')
+    .update({ status })
+    .eq('id', id);
 
-const supabaseUrl  = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  if (error) throw error;
+  return data;
+}
 
-export const supabase = createClient(supabaseUrl, supabaseAnon);
-
-export type AppStatus = "pending" | "shortlisted" | "rejected";
+// وتأكد أنك عرفت الـ types أيضاً إذا لم تكن موجودة
+export type ApplicationStatus = 'pending' | 'shortlisted' | 'rejected';
 
 export interface Application {
-  id:         string;
-  full_name:  string;
-  email:      string;
-  job_title:  string;
-  resume_url: string | null;
-  status:     AppStatus;
-  created_at?: string;
+  id: string;
+  full_name: string;
+  email: string;
+  job_title: string;
+  resume_url: string;
+  status: ApplicationStatus;
+  created_at: string;
 }
